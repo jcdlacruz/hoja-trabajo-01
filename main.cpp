@@ -34,8 +34,9 @@ struct trabajador{
 };
 
 void mp();
-void agregarTrabajador();
+void salario();
 void leerArchivo();
+void reporte();
 
 int main(){
 	mp();
@@ -56,7 +57,7 @@ void mp(){
 		
 		switch(i){
 			case 1:
-				{agregarTrabajador();}
+				{salario();}
 				system("Pause");
 				system("CLS");
 				goto MenuPrincipal;
@@ -67,7 +68,7 @@ void mp(){
 				system("CLS");
 				goto MenuPrincipal;
 			case 3:
-				cout<<"Reporte"<<endl;
+				{reporte();}
 				system("Pause");
 				goto MenuPrincipal;
 			case 4:
@@ -85,7 +86,7 @@ void mp(){
 		}
 };
 
-void agregarTrabajador(){
+void salario(){
 	int maximoHorasLaborales = 40;
 	float igss = 0.1067;
 	float valorHoraExtra = 1.5;
@@ -218,12 +219,7 @@ void leerArchivo(){
 	 	exit(1);
 	 }
 	 
-	 for(int i = 0; i < lineas; i++){
-	 	if(!archivo){
-	 		cerr<<"No se pudo abrir el archivo."<<endl;
-	 		system("Pause");
-		 }
-		 
+	 for(int i = 0; i < lineas; i++){		 
 		 archivo>>lista[i].nombre
 		 >>lista[i].salarioHora
 		 >>lista[i].horasTrabajadas
@@ -236,24 +232,84 @@ void leerArchivo(){
 	 archivo.close();
 	 
 	 for(int i = 0; i < lineas; i++){
-	 	cout<<"Registro: "<<i<<endl;
-	 	cout<<"Nombre"<<setw(15)
-			<<"Salario x Hora"<<setw(10)
-			<<"Horas trabajadas"<<setw(10)
-			<<"Horas extra"<<setw(10)
-			<<"Salario base"<<setw(10)
-			<<"Igss"<<setw(10)
-			<<"Salario x Hora Extra"<<setw(10)
-			<<"Salario total"<<setw(10)<<endl;
+	 	if(i == 0){
+		 	cout<<"Id "<<"\t"
+			    <<"Nombre"<<"\t"
+				<<"Sal_x_Hr"<<"\t"
+				<<"Hr_trab"<<"\t"
+				<<"Hr_xtr"<<"\t"
+				<<"Sal_base"<<"\t"
+				<<"Igss"<<"\t"
+				<<"Sal_x_Hr_xtr"<<"\t"
+				<<"Sal_tot"<<endl;
+		}
 		
-		cout<<lista[i].nombre<<setw(15)
-			<<lista[i].salarioHora<<setw(10)
-			<<lista[i].horasTrabajadas<<setw(10)
-			<<lista[i].horasExtra<<setw(10)
-			<<lista[i].salarioBase<<setw(10)
-			<<lista[i].igss<<setw(10)
-			<<lista[i].salarioHoraExtra<<setw(10)
-			<<lista[i].salarioTotal<<setw(10)<<endl;
+		cout<<i<<"\t"
+			<<lista[i].nombre<<"\t"
+			<<lista[i].salarioHora<<"\t"
+			<<lista[i].horasTrabajadas<<"\t"
+			<<lista[i].horasExtra<<"\t"
+			<<lista[i].salarioBase<<"\t"
+			<<lista[i].igss<<"\t"
+			<<lista[i].salarioHoraExtra<<"\t"
+			<<lista[i].salarioTotal<<endl;
 	 }
-	 system("Pause");
+};
+
+void reporte(){
+	 ifstream archivo;
+	 string nombreArchivo,s, linea;
+	 int lineas, i = 0;
+	 float salario, igss;
+	 
+	 fflush(stdin);
+	 system("CLS");
+	 
+	 cout<<"Ingrese nombre del archivo: ";
+	 getline(cin, nombreArchivo);
+	 
+	 archivo.open(nombreArchivo.c_str(), ios::in);
+	 if(archivo.fail()){
+	 	cout<<"Se presento un error al intentar abrir el archivo.";
+	 	exit(1);
+	 }	
+	 
+	 while(getline(archivo, s))
+		lineas++;
+		
+     archivo.close();
+     system("CLS");
+     
+     trabajador lista[lineas];
+     
+     archivo.open(nombreArchivo.c_str(), ios::in);
+	 if(archivo.fail()){
+	 	cout<<"Se presento un error al intentar abrir el archivo.";
+	 	exit(1);
+	 }
+	 
+	 for(int i = 0; i < lineas; i++){		 
+		 archivo>>lista[i].nombre
+		 >>lista[i].salarioHora
+		 >>lista[i].horasTrabajadas
+		 >>lista[i].horasExtra
+		 >>lista[i].salarioBase
+		 >>lista[i].igss
+		 >>lista[i].salarioHoraExtra
+		 >>lista[i].salarioTotal;
+	 }
+	 archivo.close();
+	 
+	 igss = 0;
+	 salario = 0;
+	 
+	 for(int i = 0; i < lineas; i++){	
+		igss = igss + lista[i].igss;
+		salario = salario + lista[i].salarioTotal;
+	 }
+	 system("CLS");
+	 cout<<"Reporte de planilla"<<endl;
+	 cout<<"Salario total a pagar: "<<salario<<endl;
+	 cout<<"Igss total a pagar: "<<igss<<endl;
+	 cout<<"----------------------"<<endl;
 };
